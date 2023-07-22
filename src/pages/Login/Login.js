@@ -8,7 +8,7 @@ const Login = () => {
     const { register, handleSubmit, formState: { errors }, } = useForm();
     const [data, setData] = useState("");
     const [loginError, setLoginError] = useState("");
-    const { loginWithEmailAndPassword } = useContext(AuthContext)
+    const { loginWithEmailAndPassword, loginWithGoogle } = useContext(AuthContext)
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -27,10 +27,19 @@ const Login = () => {
                 setLoginError(error.message)
             })
         console.log(data);
-        
     }
 
-    console.log(errors);
+    const handleGoogleLogIn = () => {
+        loginWithGoogle()
+            .then(result => {
+                const user = result.user;
+                navigate(from, {replace:true});
+                console.log(user);
+            })
+            .catch(error => {
+                console.log(error);
+        })
+    }
     return (
         <div className='h-[550px] flex justify-center items-center'>
             <div className='w-96'>
@@ -72,7 +81,7 @@ const Login = () => {
                     </div>
                     
                     <div className="form-control">
-                    <p><small className='text-xs'>Forgot password?</small></p>
+                    <Link to="/forgotPassword" className='text-secondary'><small className='text-xs'>Forgot password?</small></Link>
                     </div>
                     <input className='btn btn-accent w-full mt-4' type="submit" />
                 </form>
@@ -82,7 +91,7 @@ const Login = () => {
                 <div className='text-center mt-3'>
                     <p className='text-center'><small>New to Doctors Portal? <Link className='text-secondary' to="/signUp"> Create new account</Link></small></p>
                     <div className="divider">OR</div>
-                    <button className='btn btn-outline btn-accent w-full'>Continue With Google</button>
+                    <button onClick={handleGoogleLogIn} className='btn btn-outline btn-accent w-full'>Continue With Google</button>
                 </div>
             </div>
         </div>

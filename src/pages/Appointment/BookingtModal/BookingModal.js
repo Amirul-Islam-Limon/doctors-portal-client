@@ -1,31 +1,70 @@
 import { format } from 'date-fns';
-import React from 'react';
+import React, { useContext } from 'react';
+import { AuthContext } from '../../../context/AuthProvider';
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
-const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
+const BookingModal = ({ treatment, selectedDate, setTreatment, refetch}) => {
+    const { user } = useContext(AuthContext);
     const { name, slots } = treatment;
     const date = format(selectedDate, "PP");
+
+    const MySwal = withReactContent(Swal)
 
     const handleBooking = (event) => {
         event.preventDefault();
         const form = event.target;
         const slot = form.slot.value;
-        const name = form.name.value;
+        const userName = form.name.value;
         const email = form.email.value;
         const phone = form.phone.value;
 
         
         const booking = {
             appointmentDate: date,
-            treatment: treatment.name,
+            treatmentName: treatment.name,
             slot,
-            name,
+            userName,
             email,
             phone
         }
 
+        fetch("http://localhost:5000/bookings", {
+            method: "POST",
+            headers: {
+                "content-type":"application/json"
+            },
+            body: JSON.stringify(booking)
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                if (data.acknowledged) {
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Booking Confirmed!',
+                        showConfirmButton: false,
+                        timer: 2000
+                    })
+                    setTreatment(null);
+                    refetch();
+                }
+                else {
+                    setTreatment(null);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: `${data.message}`,
+                        footer: "You can't book multiple appointment a day !"
+                      })
+                }
+                
+            })
+
         console.log(booking);
         // send data to the server and set a seccessfull toast;
-        setTreatment(null);
+        
     }
 
     return (
@@ -43,8 +82,8 @@ const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
                                     value={slot}>{slot}</option>)
                             }
                             </select>
-                        <input name='name' type="text" placeholder="Your Name" className="input input-bordered  w-full mt-2" />
-                        <input name='email' type="email" placeholder="Email Address" className="input input-bordered  w-full mt-2" />
+                        <input name='name' defaultValue={user?.displayName} readOnly type="text" placeholder="Your Name" className="input input-bordered  w-full mt-2" />
+                        <input name='email' defaultValue={user?.email} readOnly type="email" placeholder="Email Address" className="input input-bordered  w-full mt-2" />
                         <input name='phone' type="text" placeholder="Phone Number" className="input input-bordered  w-full mt-2 mb-3" />
                         <input className='btn btn-accent w-full' type="submit" value="Submit" />
                     </form>

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthProvider';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
@@ -11,7 +11,8 @@ const SignUp = () => {
     const [data, setData] = useState("");
     const [signUpError, setSignUpError] = useState("");
     const {createUserByEmailPassword, updateUserProfile} = useContext(AuthContext)
-  
+    const navigate = useNavigate();
+
     const MySwal = withReactContent(Swal)
 
     const handleSignIn = (data) => {
@@ -30,7 +31,8 @@ const SignUp = () => {
                             title: 'User Created Successfully',
                             showConfirmButton: false,
                             timer: 1500
-                          })
+                        })
+                        navigate("/");
                      })
                     .catch(error => {
                         setSignUpError(error.message);
