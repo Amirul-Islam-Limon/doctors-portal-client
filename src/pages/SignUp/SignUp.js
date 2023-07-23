@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthProvider';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import useToken from '../../hooks/useToken';
 
 const SignUp = () => {
     const { register, handleSubmit, formState: { errors }, } = useForm();
@@ -12,8 +13,20 @@ const SignUp = () => {
     const [signUpError, setSignUpError] = useState("");
     const {createUserByEmailPassword, updateUserProfile} = useContext(AuthContext)
     const navigate = useNavigate();
-
+    const [createdUserEmail, setCreatedUserEmail] = useState("");
+    const [token] = useToken(createdUserEmail);
     const MySwal = withReactContent(Swal)
+
+    if (token) {
+        navigate('/');
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'User Created Successfully',
+            showConfirmButton: false,
+            timer: 1500
+            })
+    }
 
     const handleSignIn = (data) => {
         setSignUpError("");
@@ -25,14 +38,7 @@ const SignUp = () => {
                 }
                 updateUserProfile(userInfo)
                     .then(() => {
-                        Swal.fire({
-                            position: 'top-end',
-                            icon: 'success',
-                            title: 'User Created Successfully',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                        navigate("/");
+                        saveUser(data.name, data.email);
                      })
                     .catch(error => {
                         setSignUpError(error.message);
@@ -45,6 +51,21 @@ const SignUp = () => {
                 console.log(error)
             });
         console.log(data);
+    }
+
+    const saveUser = (name, email) => {
+        const user = { name, email };
+        fetch('http://localhost:5000/users', {
+            method: "POST",
+            headers: {
+                "content-type":"application/json"
+            },
+            body: JSON.stringify(user)
+        })
+            .then(res => res.json())
+            .then(data => {
+                setCreatedUserEmail(email);  
+        })
     }
 
     console.log(errors);
