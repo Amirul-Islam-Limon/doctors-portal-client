@@ -6,7 +6,11 @@ const AllUser = () => {
     const {data:users=[], refetch } = useQuery({
         queryKey: ["users"],
         queryFn: async () => {
-            const res = await fetch("http://localhost:5000/users");
+            const res = await fetch("http://localhost:5000/users", {
+                headers: {
+                    "authorization": `bearer ${localStorage.getItem("accessToken")}`
+                }
+            });
             const data = await res.json();
             return data;
         }
@@ -28,7 +32,7 @@ const AllUser = () => {
     }
     return (
         <div>
-            <h3 className='text-3xl mb-5'>All Users</h3>
+            <h3 className='text-3xl mb-5 font-semibold ps-4'>All Users</h3>
 
 
             <div className="overflow-x-auto">

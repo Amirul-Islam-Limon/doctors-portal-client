@@ -8,9 +8,11 @@ import Loading from '../pages/shared/Loading/Loading';
 const DashboardLayout = () => {
     const { user } = useContext(AuthContext);
     const [isAdmin, isAdminLoading] = useAdmin(user?.email)
+
     if (isAdminLoading) {
         return <Loading></Loading>
     }
+    
     return (
         <div>
             <Navbar></Navbar>
@@ -21,11 +23,17 @@ const DashboardLayout = () => {
                 </div> 
                 <div className="drawer-side">
                     <label htmlFor="dashboard-drawer" className="drawer-overlay"></label> 
-                    <ul className="menu p-4 w-80 h-full bg-base-200 text-base-content">
+                    <ul className="menu p-4 w-80 h-full bg-base-200 text-base-content font-semibold">
                     {/* Sidebar content here */}
                     <li><Link to="/dashboard">My Appointment</Link></li>
                     {
                         isAdmin && <li><Link to="/dashboard/allUsers">All User</Link></li>
+                    }
+                    {
+                        isAdmin && <li><Link to="/dashboard/addDoctor">Add Doctor</Link></li>
+                    }
+                    {
+                        isAdmin && <li><Link to="/dashboard/manageDoctors">Manage Doctors</Link></li>
                     }
                     </ul>
                 

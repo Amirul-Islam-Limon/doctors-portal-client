@@ -3,11 +3,13 @@ import React, { useContext } from 'react';
 import { AuthContext } from '../../../context/AuthProvider';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import { useNavigate } from 'react-router-dom';
 
 const BookingModal = ({ treatment, selectedDate, setTreatment, refetch}) => {
     const { user } = useContext(AuthContext);
     const { name, slots } = treatment;
     const date = format(selectedDate, "PP");
+    const navigate = useNavigate();
 
     const MySwal = withReactContent(Swal)
 
@@ -49,6 +51,8 @@ const BookingModal = ({ treatment, selectedDate, setTreatment, refetch}) => {
                     })
                     setTreatment(null);
                     refetch();
+                    navigate("/dashboard");
+                    
                 }
                 else {
                     setTreatment(null);

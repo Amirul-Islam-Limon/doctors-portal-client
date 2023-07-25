@@ -1,8 +1,33 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PrimaryButton from '../../../components/PrimaryButton/PrimaryButton';
+import { AuthContext } from '../../../context/AuthProvider';
+import { Link, Navigate, Route, Router, useLocation, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 const AppointmentOption = ({appointmentOption, setTreatment}) => {
     const { name, slots } = appointmentOption;
+    const { user } = useContext(AuthContext);
+    const navigate = useNavigate();
+
+    const MySwal = withReactContent(Swal)
+
+    const handleModalAndBookAppointment = (appointmentOption) => {
+        if (!user?.email) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "You can't book appointment before login !",
+                footer:'Go to Login Page .'
+            })
+            navigate("/login");
+        }
+        else {
+            setTreatment(appointmentOption) 
+        }
+            
+    }
+
     return (
         <div className="card text-center bg-base-100 shadow-xl">
             <div className="card-body">
@@ -12,7 +37,7 @@ const AppointmentOption = ({appointmentOption, setTreatment}) => {
                 <div className="flex justify-center">
                     
                     <label
-                        onClick={()=>setTreatment(appointmentOption)}
+                        onClick={()=>handleModalAndBookAppointment(appointmentOption)}
                         htmlFor="booking-modal" className="btn btn-primary text-white bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-primary">Book Appointment</label>
                     
                 </div>

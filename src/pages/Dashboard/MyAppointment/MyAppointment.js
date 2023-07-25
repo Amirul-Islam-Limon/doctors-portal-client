@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '../../../context/AuthProvider';
 import { useQuery } from '@tanstack/react-query';
+import Loading from '../../shared/Loading/Loading';
 
 const MyAppointment = () => {
     const { user } = useContext(AuthContext);
@@ -18,17 +19,12 @@ const MyAppointment = () => {
         }
     })
     if (isLoading) {
-        <div>
-            <span className="loading loading-ball loading-xs"></span>
-            <span className="loading loading-ball loading-sm"></span>
-            <span className="loading loading-ball loading-md"></span>
-            <span className="loading loading-ball loading-lg"></span>
-        </div>
+       return <Loading></Loading>
     }
     console.log(bookings);
     return (
         <div>
-            <h3 className='text-3xl mb-5'>My Appointment</h3>
+            <h3 className='text-3xl mb-5 font-semibold ps-4'>My Appointment</h3>
             <div className="overflow-x-auto">
             <table className="table">
                 {/* head */}
