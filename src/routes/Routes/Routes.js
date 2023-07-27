@@ -13,11 +13,14 @@ import AllUser from "../../pages/Dashboard/AllUser/AllUser";
 import AdminRoute from "../AdminRoute/AdminRoute";
 import AddDoctor from "../../pages/Dashboard/AddDoctor/AddDoctor";
 import ManageDoctors from "../../pages/Dashboard/ManageDoctors/ManageDoctors";
+import Payment from "../../pages/Dashboard/Payment/Payment";
+import ErrorPage from "../../pages/shared/ErrorPage/ErrorPage";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <Main></Main>,
+        errorElement:<ErrorPage></ErrorPage>,
         children: [
             {
                 path: "/",
@@ -44,6 +47,7 @@ const router = createBrowserRouter([
     {
         path: "/dashboard",
         element: <PrivateRoute><DashboardLayout></DashboardLayout></PrivateRoute>,
+        errorElement:<ErrorPage></ErrorPage>,
         children: [
             {
                 path: "/dashboard",
@@ -60,6 +64,13 @@ const router = createBrowserRouter([
             {
                 path: "/dashboard/manageDoctors",
                 element:<AdminRoute><ManageDoctors></ManageDoctors></AdminRoute>
+            },
+            {
+                path: "/dashboard/payment/:id",
+                element: <AdminRoute><Payment></Payment></AdminRoute>,
+                loader: (params) => {
+                    return fetch(`https://doctors-portal-server-kappa-bice.vercel.app/bookings/${params.params.id}`)
+                }
             },
         ]
     }

@@ -4,9 +4,10 @@ import { AuthContext } from '../../../context/AuthProvider';
 import { Link, Navigate, Route, Router, useLocation, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import AvailableAppointments from './AvailableAppointments';
 
 const AppointmentOption = ({appointmentOption, setTreatment}) => {
-    const { name, slots } = appointmentOption;
+    const { name, price, slots } = appointmentOption;
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
 
@@ -27,13 +28,14 @@ const AppointmentOption = ({appointmentOption, setTreatment}) => {
         }
             
     }
-
+   
     return (
         <div className="card text-center bg-base-100 shadow-xl">
             <div className="card-body">
                 <h2 className="text-2xl  text-secondary font-semibold text-center">{name}</h2>
                 <p>{ slots.length > 0? slots[0]:"Try another day"}</p>
                 <p>{ slots.length} {slots.length > 1?"spaces":"space" } Available</p>
+                <p><small>Price: ${price}</small></p>
                 <div className="flex justify-center">
                     
                     <label

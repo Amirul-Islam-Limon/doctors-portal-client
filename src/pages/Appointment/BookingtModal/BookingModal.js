@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 const BookingModal = ({ treatment, selectedDate, setTreatment, refetch}) => {
     const { user } = useContext(AuthContext);
-    const { name, slots } = treatment;
+    const { name, slots, price } = treatment;
     const date = format(selectedDate, "PP");
     const navigate = useNavigate();
 
@@ -25,13 +25,14 @@ const BookingModal = ({ treatment, selectedDate, setTreatment, refetch}) => {
         const booking = {
             appointmentDate: date,
             treatmentName: treatment.name,
+            price,
             slot,
             userName,
             email,
             phone
         }
 
-        fetch("http://localhost:5000/bookings", {
+        fetch("https://doctors-portal-server-kappa-bice.vercel.app/bookings", {
             method: "POST",
             headers: {
                 "content-type":"application/json"

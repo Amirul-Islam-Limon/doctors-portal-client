@@ -13,7 +13,7 @@ const AvailableAppointments = ({ selectedDate }) => {
     const { data:appointmentOptions, refetch, isLoading} = useQuery({
         queryKey: ["appointmentOptions", date],
         queryFn: async () => {
-            const { data } = await axios.get(`http://localhost:5000/appointmentOptions?date=${date}`)
+            const { data } = await axios.get(`https://doctors-portal-server-kappa-bice.vercel.app/appointmentOptions?date=${date}`)
             return data;
         }
     })
