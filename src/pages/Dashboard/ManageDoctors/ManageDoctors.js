@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import ConfirmationModal from '../../shared/ConfirmationModal/ConfirmationModal';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import Loading from '../../shared/Loading/Loading';
 
 const ManageDoctors = () => {
     const [deletingDoctor, setDeletingDoctor] = useState(null);
@@ -49,6 +50,11 @@ const ManageDoctors = () => {
                 
         })
     }
+
+    if (isLoading) {
+        return <Loading></Loading>
+    }
+
     return (
         <div>
             <h3 className='text-3xl mb-5 font-semibold ps-4'>Manage Doctors: { doctors?.length}</h3>

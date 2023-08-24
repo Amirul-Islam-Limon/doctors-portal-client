@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 const useToken = (email) => {
     const [token, setToken] = useState("");
-
+    console.log("email from useToken", email)
     useEffect(() => {
         if (email) {
         fetch(`https://doctors-portal-server-kappa-bice.vercel.app/jwt?email=${email}`)
